@@ -1,4 +1,6 @@
+using OrderProcessingService.Api.Middleware;
 using OrderProcessingService.Application.Repositories;
+using OrderProcessingService.Application.Services;
 using OrderProcessingService.Infrastructure.Configuration;
 using OrderProcessingService.Infrastructure.DependencyInjection;
 
@@ -10,11 +12,18 @@ builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("R
 
 builder.Services.AddInfrastructure();
 
+builder.Services.AddSingleton<IOrderStatusTransitionService, OrderStatusTransitionService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IProductCatalogService, ProductCatalogService>();
+
+builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseMiddleware<GlobalExceptionHandlerMiddleware>();
 
 await app.Services.GetRequiredService<IProductRepository>().SeedProductsAsync();
 
