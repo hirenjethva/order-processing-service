@@ -7,4 +7,6 @@ public interface ICacheService
     Task SetAsync<T>(string key, T value, TimeSpan ttl);
 
     Task DeleteAsync(string key);
+
+    Task DeleteByPatternAsync(string pattern);
 }
