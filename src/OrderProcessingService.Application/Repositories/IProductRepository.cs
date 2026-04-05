@@ -10,5 +10,8 @@ public interface IProductRepository
 
     Task<Product?> ReserveStockAsync(string productId, int quantity);
 
+    /// <summary>Restores stock after a failed order (e.g. compensating reservation).</summary>
+    Task ReleaseStockAsync(string productId, int quantity);
+
     Task SeedProductsAsync();
 }

@@ -1,4 +1,5 @@
 using OrderProcessingService.Application.Repositories;
+using OrderProcessingService.Application.Services;
 using OrderProcessingService.Infrastructure.Configuration;
 using OrderProcessingService.Infrastructure.DependencyInjection;
 
@@ -9,6 +10,9 @@ builder.Services.Configure<RedisSettings>(builder.Configuration.GetSection("Redi
 builder.Services.Configure<RabbitMqSettings>(builder.Configuration.GetSection("RabbitMQ"));
 
 builder.Services.AddInfrastructure();
+
+builder.Services.AddSingleton<IOrderStatusTransitionService, OrderStatusTransitionService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();

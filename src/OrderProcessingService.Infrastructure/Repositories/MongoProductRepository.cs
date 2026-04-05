@@ -38,6 +38,16 @@ public sealed class MongoProductRepository : IProductRepository
         return await _collection.FindOneAndUpdateAsync(filter, update, options);
     }
 
+    public async Task ReleaseStockAsync(string productId, int quantity)
+    {
+        if (quantity <= 0)
+            return;
+
+        await _collection.UpdateOneAsync(
+            Builders<Product>.Filter.Eq(p => p.Id, productId),
+            Builders<Product>.Update.Inc(p => p.StockQuantity, quantity));
+    }
+
     public async Task SeedProductsAsync()
     {
         if (await _collection.CountDocumentsAsync(FilterDefinition<Product>.Empty) > 0)
